@@ -1,14 +1,8 @@
 require_relative './lib/pgn/file'
 require_relative './lib/scoutfish'
 
-# Config
-sub_fen = '8/4pp2/3p2p1/8/2P1P3/8/6P1/8'
-
-pgn_file_path = File.join(
-  File.dirname(File.absolute_path(__FILE__)),
-  'pgn',
-  'lichess_db_standard_rated_2014-07.pgn'
-)
+pgn_file_path = ARGV[0]
+query = JSON.parse(ARGV[1])
 
 # Execution
 logger = Logger.new(STDOUT)
@@ -21,19 +15,26 @@ unless scoutfish.database_exists?
 end
 
 logger.info "Starting search..."
-scout_results = scoutfish.scout({
-  'sub-fen' => sub_fen
-})
+scout_results = scoutfish.scout(query)
 
-logger.info "Found #{scout_results.matches.count} matches containing fen: #{sub_fen}"
+logger.info "Found #{scout_results.matches.count} matches containing fen: #{query}"
 
 logger.info "Filtering..."
 filtered_scout_results = scout_results
   .reject {|match|
     match.game.white_elo < 1800 || match.game.black_elo < 1800
   }
+  .filter {|match|
+    match.ply.first <= 10
+  }
 
 logger.info "#{filtered_scout_results.count} results after filtering"
+
+sample_game_1 = filtered_scout_results.sample
+sample_game_2 = filtered_scout_results.sample
+
+logger.info "Sample game 1: #{sample_game_1.inspect}/#{sample_game_1.game.inspect}"
+logger.info "Sample game 2: #{sample_game_2.inspect}/#{sample_game_2.game.inspect}"
 
 logger.info "Crunching data..."
 win_results = filtered_scout_results
