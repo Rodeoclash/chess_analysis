@@ -23,12 +23,17 @@ logger.info "Found #{scout_results.matches.count} matches containing fen: #{quer
 
 logger.info "Filtering..."
 filtered_scout_results = scout_results
-  .reject {|match|
-    match.game.white_elo < 1800 || match.game.black_elo < 1800
+  .map {|match|
+    match
   }
-  .filter {|match|
-    match.ply.first <= 10
-  }
+
+#filtered_scout_results = scout_results
+#  .reject {|match|
+#    match.game.white_elo < 1800 || match.game.black_elo < 1800
+#  }
+#  .filter {|match|
+#    match.ply.first <= 10
+#  }
 
 logger.info "#{filtered_scout_results.count} results after filtering"
 
