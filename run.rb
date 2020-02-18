@@ -2,7 +2,9 @@ require_relative './lib/pgn/file'
 require_relative './lib/scoutfish'
 
 pgn_file_path = ARGV[0]
-query = JSON.parse(ARGV[1])
+
+puts "Enter query:"
+query = JSON.parse($stdin.gets.chomp)
 
 # Execution
 logger = Logger.new(STDOUT)
