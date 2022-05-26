@@ -4,4 +4,4 @@ source "https://rubygems.org"
 
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
-gem 'yajl-ruby', '~> 1.4.1'
+gem 'yajl-ruby', '~> 1.4.3'
